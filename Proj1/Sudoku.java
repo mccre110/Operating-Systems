@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.*;
 public class Sudoku
 {
 	public static void main(String[] args) 
@@ -8,9 +9,20 @@ public class Sudoku
 		// file = input.next();
 		System.out.println("Enter board filename:");
 		Board bd = new Board(input.next());
-		bd.print();
-		CheckerThread rows = new CheckerThread(0,bd)
+		bd.printBoard();
+		CheckerThread rows = new CheckerThread(0,9,0,9,bd);
+		rows.start();
+		try
+		{
+			rows.join();
+		}
+		catch(Exception e)
+		{
 
-		bool rows.getBoard
+		}
+
+		boolean[][] penis = rows.getBoard();
+		System.out.println(Arrays.deepToString(penis));
+		//bool rows.getBoard
 	}
 }
