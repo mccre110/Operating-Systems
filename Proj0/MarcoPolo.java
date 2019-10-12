@@ -4,11 +4,11 @@ public class MarcoPolo
 	{
 		ThreadOne marco = new ThreadOne();
 		ThreadOne polo = new ThreadOne();
-		marco.setName("Marco");
-		polo.setName("Polo");
+		marco.setName("Marco    ");
+		polo.setName("Polo   ");
 		marco.start();
 		polo.start();
-		
+
 		try
 		{
 			marco.join();
