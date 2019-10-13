@@ -52,10 +52,9 @@ public class CheckerThread extends Thread
 							checkboard[i][k] = false;
 				}
 			}
-			//System.out.println(Arrays.toString(goodValues));
 		}
 	}
-		public void modeTworun()
+	public void modeTworun()
 	{
 		iUpper =9; iLower =0; jUpper=9; jLower=0;
 		for (int i=iLower;i<iUpper;i++)
@@ -74,9 +73,7 @@ public class CheckerThread extends Thread
 							checkboard[k][i] = false;
 				}
 			}
-			//System.out.println(Arrays.toString(goodValues));
 		}
-		//printCheckboard();
 	}
 	public void check(int iLower, int iUpper, int jLower, int jUpper)
 	{
@@ -90,11 +87,14 @@ public class CheckerThread extends Thread
 				{
 					checkboard[i][j] = false;
 					for(int k = 0; k<iUpper; k++)
-						if (bd.board[i][j]==bd.board[i][k])
-							checkboard[i][k] = false;
+						for (int p=0;p<jUpper;p++) 
+						{
+							if (bd.board[i][j]==bd.board[p][k])
+								checkboard[p][k] = false;
+						}
+						
 				}
 			}	
-		//System.out.println(Arrays.toString(goodValues));
 	}
 	public boolean[][] getBoard()
 	{
@@ -103,11 +103,12 @@ public class CheckerThread extends Thread
 
 	public void printCheckboard()
 	{
-		for (int i=0;i<9;i++) 
-			{
-				for (int j=0;j<9;j++) 
+		for (int i=0;i<9;i++)
+		{
+			for (int j=0;j<9;j++) 
 					System.out.print(checkboard[i][j]+"|");
 				System.out.println("");
-			}
+		}
+			System.out.println("");	
 	}
 }

@@ -23,6 +23,9 @@ public class Sudoku
 			sub.join();
 		}
 		catch(Exception e)	{		}
+		rows.printCheckboard();
+		col.printCheckboard();
+		sub.printCheckboard();
 
 		boolean[][] one = rows.getBoard();
 		boolean[][] two = col.getBoard();
