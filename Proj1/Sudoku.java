@@ -5,24 +5,30 @@ public class Sudoku
 	public static void main(String[] args) 
 	{
 		Scanner input = new Scanner(System.in);
-		// String file;
-		// file = input.next();
 		System.out.println("Enter board filename:");
 		Board bd = new Board(input.next());
 		bd.printBoard();
-		CheckerThread rows = new CheckerThread(0,9,0,9,bd);
+
+		CheckerThread rows = new CheckerThread(bd,1);
+		CheckerThread col = new CheckerThread(bd,2);
+		CheckerThread sub = new CheckerThread(bd,3);
+
 		rows.start();
+		col.start();
+		sub.start();
 		try
 		{
 			rows.join();
+			col.join();
+			sub.join();
 		}
-		catch(Exception e)
-		{
+		catch(Exception e)	{		}
 
-		}
-
-		boolean[][] penis = rows.getBoard();
-		System.out.println(Arrays.deepToString(penis));
-		//bool rows.getBoard
+		boolean[][] one = rows.getBoard();
+		boolean[][] two = col.getBoard();
+		boolean[][] three =sub.getBoard();
+		System.out.println(Arrays.deepToString(one));
+		System.out.println(Arrays.deepToString(two));
+		System.out.println(Arrays.deepToString(three));
 	}
 }
