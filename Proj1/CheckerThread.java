@@ -4,7 +4,7 @@ public class CheckerThread extends Thread
 	int iUpper, iLower, jUpper, jLower, mode;
 	int[] goodValues; 
 	int bad = -1;
-	boolean checkboard[][] = new boolean[9][9];;
+	int checkboard[][] = new int[9][9];;
 	Board bd;
 
 	public CheckerThread(Board bd, int mode)
@@ -13,7 +13,7 @@ public class CheckerThread extends Thread
 		this.mode = mode;
 		for (int i=0;i<9;i++) 
 				for (int j=0;j<9;j++) 
-					checkboard[i][j] = true;
+					checkboard[i][j] = 0;
 	}
 	public void run()
 	{
@@ -46,10 +46,10 @@ public class CheckerThread extends Thread
 					goodValues[bd.board[i][j]-1]=bad;
 				else if(goodValues[bd.board[i][j]-1]==bad)
 				{
-					checkboard[i][j] = false;
+					checkboard[i][j] = getValues(goodValues);
 					for(int k = 0; k<iUpper; k++)
 						if (bd.board[i][j]==bd.board[i][k])
-							checkboard[i][k] = false;
+							checkboard[i][k] = getValues(goodValues);
 				}
 			}
 		}
@@ -64,13 +64,12 @@ public class CheckerThread extends Thread
 			{
 				if ((goodValues[bd.board[j][i]-1])!=bad)
 					goodValues[bd.board[j][i]-1]=bad;
-					//continue;
 				else if(goodValues[bd.board[j][i]-1]==bad)
 				{
-					checkboard[j][i] = false;
+					checkboard[j][i] = getValues(goodValues);
 					for(int k = 0; k<9; k++)
 						if (bd.board[j][i]==bd.board[k][i])
-							checkboard[k][i] = false;
+							checkboard[j][i] = getValues(goodValues);
 				}
 			}
 		}
@@ -85,18 +84,18 @@ public class CheckerThread extends Thread
 					goodValues[bd.board[i][j]-1]=bad;
 				else if(goodValues[bd.board[i][j]-1]==bad)
 				{
-					checkboard[i][j] = false;
+					checkboard[i][j] = getValues(goodValues);
 					for(int k = 0; k<iUpper; k++)
 						for (int p=0;p<jUpper;p++) 
 						{
 							if (bd.board[i][j]==bd.board[p][k])
-								checkboard[p][k] = false;
+								checkboard[i][j] = getValues(goodValues);
 						}
 						
 				}
 			}	
 	}
-	public boolean[][] getBoard()
+	public int[][] getBoard()
 	{
 		return checkboard;
 	}
@@ -107,8 +106,19 @@ public class CheckerThread extends Thread
 		{
 			for (int j=0;j<9;j++) 
 					System.out.print(checkboard[i][j]+"|");
-				System.out.println("");
+			System.out.println("");
 		}
-			System.out.println("");	
+		System.out.println("");	
+	}
+	public int getValues(int[] arr)
+	{
+		for (int i=0;i<9;i++) 
+		{
+			if (goodValues[i]!=bad) 
+			{
+				return goodValues[i];
+			}	
+		}
+		return 0;
 	}
 }

@@ -27,9 +27,19 @@ public class Sudoku
 		col.printCheckboard();
 		sub.printCheckboard();
 
-		boolean[][] one = rows.getBoard();
-		boolean[][] two = col.getBoard();
-		boolean[][] three =sub.getBoard();
+		int[][] one = rows.getBoard();
+		int[][] two = col.getBoard();
+		int[][] three =sub.getBoard();
+		for (int i=9;i<9;i++) 
+		{
+			for (int j=0;j<9;j++) 
+			{
+				if (one[i][j]==two[i][j]&&one[i][j]==three[i][j]&&two[i][j]==three[i][j]) 
+				{
+					System.out.println("Fucked");
+				}
+			}
+		}
 		System.out.println(Arrays.deepToString(one));
 		System.out.println(Arrays.deepToString(two));
 		System.out.println(Arrays.deepToString(three));
