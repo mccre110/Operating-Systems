@@ -2,7 +2,7 @@
 
 I have three classes that I am submitting: 
 - [Sudoku](./Sudoku.java) 
-- [CheckerThread](./CheckerThread) 
+- [CheckerThread](./CheckerThread.java) 
 - [Board](./Board.java)
 
 Board is simply a class with a 2x2 array which holds the representation of the sudoku board. The board class can read from a CSV file and write to its integer array. 
