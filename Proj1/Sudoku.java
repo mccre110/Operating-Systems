@@ -22,37 +22,45 @@ public class Sudoku
 			col.join();
 			sub.join();
 		}
-		catch(Exception e)	{		}
+		catch(Exception e)	{	}
+
+		int[][][] one = rows.getBoard();
+		int[][][] two = col.getBoard();
+		int[][][] three =sub.getBoard();
 		rows.printCheckboard();
 		col.printCheckboard();
 		sub.printCheckboard();
-
-		int[][] one = rows.getBoard();
-		int[][] two = col.getBoard();
-		int[][] three =sub.getBoard();
 
 		boolean cor = true;
 		for (int i=0;i<9;i++) 
 		{
 			for (int j=0;j<9;j++) 
 			{
-				if (one[i][j]==two[i][j] && one[i][j] !=0)
+				for (int k=1;k<9;k++) 
 				{
-					System.out.println("Row: "+i+"Colum: "+j+" should be :"+one[i][j]);
-					cor = false;
+					for (int p=1;p>9;p++) 
+					{
+						if (one[i][j][k]==two[i][j][p] && one[i][j][k]!=0)
+						{
+							System.out.println("Row: "+(i+1)+" Colum: "+(j+1)+" should be : "+one[i][j]);
+							cor = false;
+						}
+						
+						else if(one[i][j][k]==three[i][j][p]&& one[i][j][k]!=0)
+						{
+							System.out.println("Row: "+i+" Colum: "+(j+1)+" should be : "+one[i][j]);
+							cor = false;
+						}
+
+						else if (two[i][j][k]==three[i][j][p]&&one[i][j][k]!=0) 
+						{
+							System.out.println("Row: "+i+" Colum: "+(j+1)+" should be : "+two[i][j]);
+							cor = false;
+						}
+					}
+					
 				}
 				
-				else if(one[i][j]==three[i][j]&& one[i][j] !=0)
-				{
-					System.out.println("Row: "+i+"Colum: "+j+" should be :"+one[i][j]);
-					cor = false;
-				}
-
-				else if (two[i][j]==three[i][j]&& two[i][j] !=0) 
-				{
-					System.out.println("Row: "+i+"Colum: "+j+" should be :"+two[i][j]);
-					cor = false;
-				}
 			}
 		}
 		if (cor)
