@@ -1,7 +1,7 @@
 # Project 1 Breakdown
 
 I have three classes that I am submitting: 
-- [Sudoku](./Soduku) 
+- [Sudoku](./Soduku.java) 
 - CheckerThread 
 - Board
 
