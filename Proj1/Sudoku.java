@@ -38,30 +38,24 @@ public class Sudoku
 			{
 				if (one[i][j]==two[i][j] && one[i][j] !=0)
 				{
-					System.out.println("Fucked");
+					System.out.println("Row: "+i+"Colum: "+j+" should be :"+one[i][j]);
 					cor = false;
 				}
 				
 				else if(one[i][j]==three[i][j]&& one[i][j] !=0)
 				{
-					System.out.println("Fucked");
+					System.out.println("Row: "+i+"Colum: "+j+" should be :"+one[i][j]);
 					cor = false;
 				}
 
 				else if (two[i][j]==three[i][j]&& two[i][j] !=0) 
 				{
-					System.out.println("Fucked");
+					System.out.println("Row: "+i+"Colum: "+j+" should be :"+two[i][j]);
 					cor = false;
 				}
 			}
 		}
 		if (cor)
-		{
 			System.out.println("Baustiofifiifiu board");
-		}
-
-		// System.out.println(Arrays.deepToString(one));
-		// System.out.println(Arrays.deepToString(two));
-		// System.out.println(Arrays.deepToString(three));
 	}
 }

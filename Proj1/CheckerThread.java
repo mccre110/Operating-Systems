@@ -120,6 +120,8 @@ public class CheckerThread extends Thread
 						
 				}
 			}
+
+			
 		for (int i=iLower;i<iUpper;i++) 
 			for (int j=jLower;j<jUpper;j++) 
 				if (checkboard[i][j] == bad) 
