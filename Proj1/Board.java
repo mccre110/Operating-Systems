@@ -4,8 +4,6 @@ import java.io.*;
 public class Board
 {
 	int board[][];
-	boolean checkboard[][];
-
 
 	public Board(String fileName)
 	{
