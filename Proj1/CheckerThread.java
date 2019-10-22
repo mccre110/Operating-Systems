@@ -46,10 +46,23 @@ public class CheckerThread extends Thread
 					goodValues[bd.board[i][j]-1]=bad;
 				else if(goodValues[bd.board[i][j]-1]==bad)
 				{
-					checkboard[i][j] = getValues(goodValues);
+					checkboard[i][j] = bad;
 					for(int k = 0; k<iUpper; k++)
 						if (bd.board[i][j]==bd.board[i][k])
-							checkboard[i][k] = getValues(goodValues);
+							checkboard[i][k] = bad;
+				}
+			}
+			for (int j=jLower;j<jUpper;j++) 
+			{
+				if (checkboard[i][j] == bad) 
+				{
+					for (int k =0;k<iUpper;k++) 
+					{
+						if (goodValues[k]!=bad) 
+						{
+							checkboard[i][j] =	goodValues[k];
+						}	
+					}
 				}
 			}
 		}
@@ -66,10 +79,23 @@ public class CheckerThread extends Thread
 					goodValues[bd.board[j][i]-1]=bad;
 				else if(goodValues[bd.board[j][i]-1]==bad)
 				{
-					checkboard[j][i] = getValues(goodValues);
+					checkboard[j][i] = bad;
 					for(int k = 0; k<9; k++)
 						if (bd.board[j][i]==bd.board[k][i])
-							checkboard[j][i] = getValues(goodValues);
+							checkboard[j][i] = bad;
+				}
+			}
+			for (int j=jLower;j<jUpper;j++) 
+			{
+				if (checkboard[j][i] == bad) 
+				{
+					for (int k =0;k<iUpper;k++) 
+					{
+						if (goodValues[k]!=bad) 
+						{
+							checkboard[j][i] =	goodValues[k];
+						}	
+					}
 				}
 			}
 		}
@@ -84,16 +110,23 @@ public class CheckerThread extends Thread
 					goodValues[bd.board[i][j]-1]=bad;
 				else if(goodValues[bd.board[i][j]-1]==bad)
 				{
-					checkboard[i][j] = getValues(goodValues);
+					checkboard[i][j] = bad;
 					for(int k = 0; k<iUpper; k++)
 						for (int p=0;p<jUpper;p++) 
 						{
 							if (bd.board[i][j]==bd.board[p][k])
-								checkboard[i][j] = getValues(goodValues);
+								checkboard[i][j] = bad;
 						}
 						
 				}
-			}	
+			}
+		for (int i=iLower;i<iUpper;i++) 
+			for (int j=jLower;j<jUpper;j++) 
+				if (checkboard[i][j] == bad) 
+					for (int k =0;k<9;k++) 
+						if (goodValues[k]!=bad) 
+							checkboard[i][j] =	goodValues[k];
+		
 	}
 	public int[][] getBoard()
 	{
@@ -121,4 +154,5 @@ public class CheckerThread extends Thread
 		}
 		return 0;
 	}
+		
 }

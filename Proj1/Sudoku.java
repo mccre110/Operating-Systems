@@ -30,18 +30,38 @@ public class Sudoku
 		int[][] one = rows.getBoard();
 		int[][] two = col.getBoard();
 		int[][] three =sub.getBoard();
-		for (int i=9;i<9;i++) 
+
+		boolean cor = true;
+		for (int i=0;i<9;i++) 
 		{
 			for (int j=0;j<9;j++) 
 			{
-				if (one[i][j]==two[i][j]&&one[i][j]==three[i][j]&&two[i][j]==three[i][j]) 
+				if (one[i][j]==two[i][j] && one[i][j] !=0)
 				{
 					System.out.println("Fucked");
+					cor = false;
+				}
+				
+				else if(one[i][j]==three[i][j]&& one[i][j] !=0)
+				{
+					System.out.println("Fucked");
+					cor = false;
+				}
+
+				else if (two[i][j]==three[i][j]&& two[i][j] !=0) 
+				{
+					System.out.println("Fucked");
+					cor = false;
 				}
 			}
 		}
-		System.out.println(Arrays.deepToString(one));
-		System.out.println(Arrays.deepToString(two));
-		System.out.println(Arrays.deepToString(three));
+		if (cor)
+		{
+			System.out.println("Baustiofifiifiu board");
+		}
+
+		// System.out.println(Arrays.deepToString(one));
+		// System.out.println(Arrays.deepToString(two));
+		// System.out.println(Arrays.deepToString(three));
 	}
 }
