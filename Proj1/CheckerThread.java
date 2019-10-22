@@ -4,7 +4,7 @@ public class CheckerThread extends Thread
 	int iUpper, iLower, jUpper, jLower, mode;
 	int[] goodValues; 
 	int bad = -1;
-	int checkboard[][][] = new int[9][9][9];
+	int checkboard[][][] = new int[9][9][10];
 	Board bd;
 
 	public CheckerThread(Board bd, int mode)
@@ -57,13 +57,11 @@ public class CheckerThread extends Thread
 			{
 				if (checkboard[i][j][0] == bad) 
 				{
-					int o = 1;
 					for (int k =0;k<iUpper;k++) 
 					{
 						if (goodValues[k]!=bad ) 
 						{
-							checkboard[i][j][o] =goodValues[k];
-							o++;
+							checkboard[i][j][goodValues[k]] =goodValues[k];
 						}	
 					}
 				}
@@ -92,13 +90,11 @@ public class CheckerThread extends Thread
 			{
 				if (checkboard[j][i][0] == bad) 
 				{
-					int o = 1;
 					for (int k =0;k<iUpper;k++) 
 					{
 						if (goodValues[k]!=bad) 
 						{
-							checkboard[j][i][o] =goodValues[k];
-							o++;
+							checkboard[j][i][goodValues[k]] =goodValues[k];
 						}	
 					}
 				}
@@ -131,17 +127,11 @@ public class CheckerThread extends Thread
 			for (int j=jLower;j<jUpper;j++) 
 				if (checkboard[i][j][0] == bad)
 				{
-					System.out.println("p1");
 					for (int k =0;k<9;k++) 
 						if (goodValues[k]!=bad)
 						{
-							System.out.println("p2");
-							checkboard[i][j][o] =goodValues[k];
-							// System.out.println(o);
-							//o++;
-							
-						}
-					o++;	 		
+							checkboard[i][j][goodValues[k]] =goodValues[k];
+						} 		
 				} 
 					
 		
@@ -156,7 +146,7 @@ public class CheckerThread extends Thread
 		for (int i=0;i<9;i++)
 		{
 			for (int j=0;j<9;j++) 
-					System.out.print(checkboard[i][j][4]+"|");
+					System.out.print(checkboard[i][j][0]+"|");
 			System.out.println("");
 		}
 		System.out.println("");	
@@ -172,5 +162,4 @@ public class CheckerThread extends Thread
 		}
 		return 0;
 	}
-		
 }
