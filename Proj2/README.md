@@ -1,9 +1,9 @@
 # Project 2 Breakdown
 
 I have three classes that I am submitting: 
-- Sema
-- MyThread
-- Shared 
+- [Sema](Sema.java)
+- [MyThread](MyThread.java)
+- [Shared] (Shared.java)
 
 The Shared class contains a few static fields for two threads to modify sequentially. 
 
