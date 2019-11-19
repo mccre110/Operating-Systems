@@ -1,4 +1,4 @@
-import java.util.concurrent.Semaphore; ; 
+import java.util.concurrent.Semaphore; 
 
 class Sema 
 { 
