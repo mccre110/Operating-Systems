@@ -5,6 +5,10 @@ public class Scheduler extends Thread
 	private MyThread three;
 	private MyThread four;
 	private int per;
+	private int oneRun;
+	private int twoRun;
+	private int threeRun;
+	private int fourRun;
 	public Scheduler(MyThread one, MyThread two, MyThread three, MyThread four, int per)
 	{
 		this.one = one;
@@ -19,139 +23,128 @@ public class Scheduler extends Thread
 	{
 		try
 		{
-			// one.start();
-			// two.start();
-			// three.start();
-			// four.start();
 			// one.curr.acquire();
 			// two.curr.acquire();
 			// three.curr.acquire();
 			// four.curr.acquire();
+			one.start();
+			two.start();
+			three.start();
+			four.start();
+
 			int time = 0;
-			for (int i = 0;i<(per*1);i++) 
+			for (int i = 0;i<(per*10);i++) 
 			{
-				one.start();
-				two.start();
-				three.start();
-				four.start();
-
-				try
-				{
-					sch(time);
-					time++;
-					sleep(10);
-				}
-				catch(Exception e){}
-
-
+				sch(i);
+				i = time;
+				time++;
+				sleep(10);
 			}
 
 			one.join();
 			two.join();
 			three.join();
 			four.join();
-			System.out.println(one.count);
-			System.out.println(two.count);
-			System.out.println(three.count);
-			System.out.println(four.count);
+			print();
+			
 		}
-		catch (Exception e){}
+		catch (Exception e){System.out.println(e);}
 
 		
 	}
 	public void sch(int time)
 	{
-		// if (one.time==0)
-		// {
-		// 	one.time = time;
-		// 	one.start();
-		// 	//return;
-		// }
-		// try
-		// {
-		// 	if (time<(one.per+one.time))
-		// 	{
-		// 		one.time = time;
-		// 		one.curr.release();
-		// 		return;
-		// 	}
-		// 	else if ((time>=(one.per+one.time))&& time<(two.per+two.time) )
-		// 	{
-		// 		two.time = time;
-		// 		//one.curr.acquire();
-		// 		two.curr.release();
-		// 		return;
-		// 	}
-		// 	else if ( time<(three.per+three.time) )
-		// 	{
-		// 		three.time = time;
-		// 		two.curr.acquire();
-		// 		three.curr.release();
-		// 		return;
-		// 	}
-		// 	else if ((time>=(three.per+three.time))&& time<(four.per+four.time) )
-		// 	{
-		// 		four.time = time;
-		// 		three.curr.acquire();
-		// 		four.curr.release();
-		// 		return;
-		// 	}
-
-			if (time%one.per==0) 
+		if (time%one.per==0) 
+		{
+			if (!one.finished) 
 			{
-				//one.time = time;
-				one.isSch = true;
+				oneRun++;
+				time = nextPer(time);
+			}
+			else
+			{
+				//System.out.println(time);
+				one.endtime = (time%per)+one.per;
 				one.curr.release();
-				//System.out.println("1");
 			}
-			if(time%two.per==0)
+			
+			//one.isSch = true;
+			//System.out.println("1");
+		}
+		if(time%two.per==0 && one.finished)
+		{
+			if (!two.finished) 
 			{
-				// two.time = time;
-				two.isSch = true;
+				twoRun++;
+				time = nextPer(time);
+			}
+			else
+			{
+				two.endtime = (time%per)+two.per;
 				two.curr.release();
-				//System.out.println("2");
 			}
-			if(time%three.per==0)
+			
+			// two.time = time;
+			//two.isSch = true;
+			
+			//System.out.println("2");
+		}
+		if(time%three.per==0&& two.finished)
+		{
+			if (!three.finished) 
 			{
-				// three.time = time;
-				three.isSch = true;
-				three.curr.release();
-				//System.out.println("3");
+				threeRun++;
+				time = nextPer(time);
 			}
-			if(time%four.per==0)
+			else
 			{
-				// four.time = time;
-				four.isSch = true;
+				three.endtime = (time%per)+three.per;
+				three.curr.release();	
+			}
+			
+			// three.time = time;
+			//three.isSch = true;
+			
+			//System.out.println("3");
+		}
+		if(time%four.per==0&& three.finished)
+		{
+			if (!four.finished) 
+			{
+				fourRun++;
+				time = nextPer(time);
+			}
+			else
+			{
+				//System.out.println(time);
+				four.endtime = (time%per)+four.per;
 				four.curr.release();
-				//System.out.println("4");
 			}
-			one.time = time;
-			two.time = time;
-			three.time = time;
-			four.time = time;
-		// }
-		// catch(Exception e){}
+			
+			// four.time = time;
+			//four.isSch = true;
+			
+			//System.out.println("4");
+		}
+		one.time = time%per;
+		two.time = time%per;
+		three.time = time%per;
+		four.time = time%per;
+	}
+	public int nextPer(int current)
+	{
+		return current+(per-(current%per));
+	}
+	public void print()
+	{
+			System.out.println(one.count);
+			System.out.println(two.count);
+			System.out.println(three.count);
+			System.out.println(four.count);
 
-		// else if ((time>=(one.per+one.time))&&(time<(two.per+two.time)))
-		// {
-		// 	try
-		// 	{
-		// 		System.out.println("waiting");
-		// 		one.wait();
-		// 		two.notify();
-		// 	}
-		// 	catch (Exception e){}
-		// 	//return;
-		// }
-		// else if (two.greaterThan(three) && two.greaterThan(four) && (time>=(two.per+two.time)))
-		// {
-		// 	try
-		// 	{
-		// 		two.wait();
-		// 		three.notify();
-		// 	}
-		// 	catch (Exception e){}
-		// 	return;
-		//}
+			System.out.println(oneRun);
+			System.out.println(twoRun);
+			System.out.println(threeRun);
+			System.out.println(fourRun);
 	}
 }

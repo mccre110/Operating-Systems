@@ -10,6 +10,8 @@ public class MyThread extends Thread
     public Semaphore next;
     private double[][] myArr;
     public boolean isSch;
+    public boolean finished = true;
+    public int endtime;
 
 	public MyThread(String name, int per, int loops, Semaphore curr, Semaphore next)
 	{
@@ -25,7 +27,7 @@ public class MyThread extends Thread
 		{
 			for (int j=0;j<10;j++) 
 			{
-				myArr[i][j] = 1.00;
+				myArr[i][j] = 1.000;
 			}
 		}
 	}
@@ -33,23 +35,33 @@ public class MyThread extends Thread
 	@Override
 	public void run()
 	{
-		while(isSch && time<16)
+		while(time<16)
 		{
+
 			try
 			{
+				//System.out.println(this.getName());
 				curr.acquire();
-				System.out.println(this.getName());
+				count++;
+				finished = false;
 				for (int i=0; i<loops;i++) 
 				{
 					doWork();
-					count++;
-					//System.out.println(count);
+					if (time>=endtime) 
+					{
+						break;
+					}
+					System.out.println(endtime);
 					//sleep(10);
+					//count++;
 				}
-				//time = -1;
-				//next.release();
-				//sleep(10);
-				next.release();
+				if (time>=endtime) 
+				{
+					continue;
+				}
+				finished = true;
+			
+				
 				break;
 			}
 		
