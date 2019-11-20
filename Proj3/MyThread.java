@@ -4,44 +4,38 @@ public class MyThread extends Thread
 	public int per;
 	public int count =0;
 	public int loops;
-	public int prio;
 	public int time =0;
-	public Semaphore curr; 
-    public Semaphore next;
+	public Semaphore curr;
     private double[][] myArr;
-    public boolean isSch;
-    public boolean finished = true;
+    public boolean finished = false;
     public int endtime;
+    public boolean quit = false;
+    public boolean running = false;
+    public int overrun;
 
-	public MyThread(String name, int per, int loops, Semaphore curr, Semaphore next)
+	public MyThread(String name, int per, int loops, Semaphore curr)
 	{
 		super(name);
-		isSch = false;
-		prio = 1/per;
-		this.per = per;		
+		this.per = per;
 		this.loops = loops;
 		this.curr = curr;
-		this.next = next;
+
 		myArr= new double[10][10];
 		for (int i=0;i>10;i++) 
-		{
 			for (int j=0;j<10;j++) 
-			{
 				myArr[i][j] = 1.000;
-			}
-		}
 	}
 
 	@Override
 	public void run()
 	{
-		while(time<16)
+		while(!quit)
 		{
-
 			try
 			{
 				//System.out.println(this.getName());
 				curr.acquire();
+				running =true;
 				count++;
 				finished = false;
 				for (int i=0; i<loops;i++) 
@@ -49,29 +43,26 @@ public class MyThread extends Thread
 					doWork();
 					if (time>=endtime) 
 					{
+						running =false;
 						break;
 					}
-					System.out.println(endtime);
+					//System.out.println(endtime);
 					//sleep(10);
 					//count++;
 				}
+				running =false;
 				if (time>=endtime) 
-				{
 					continue;
-				}
+
 				finished = true;
-			
-				
+
+				//check
+				//overrun = time;
+
 				break;
 			}
-		
-			catch(Exception e)
-			{
-				System.out.println("Something Bad Happened");
-			}
-
+			catch(Exception e){System.out.println(e);}
 		}
-		
 	}
 
 	public void doWork()
@@ -81,11 +72,11 @@ public class MyThread extends Thread
 		{
 			for (int j =0;j<10;j++) 
 			{
-				tot *= myArr[j][i];
+				myArr[j][i] *= myArr[j][i];
 			}
 			for (int j =0;j<10;j++) 
 			{
-				tot *= myArr[j][i+5];
+				myArr[j][i] *= myArr[j][i+5];
 			}
 		}
 	}

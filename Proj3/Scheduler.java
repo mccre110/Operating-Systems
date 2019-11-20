@@ -1,21 +1,13 @@
 public class Scheduler extends Thread
 {
-	private MyThread one;
-	private MyThread two;
-	private MyThread three;
-	private MyThread four;
 	private int per;
-	private int oneRun;
-	private int twoRun;
-	private int threeRun;
-	private int fourRun;
+	private MyThread[] threads;
+	private MyThread current;
 	public Scheduler(MyThread one, MyThread two, MyThread three, MyThread four, int per)
 	{
-		this.one = one;
-		this.two = two;
-		this.three = three;
-		this.four = four;
 		this.per = per;
+		threads = new MyThread[]{one,two,three,four};
+		current = one;
 	}
 
 	@Override
@@ -23,113 +15,98 @@ public class Scheduler extends Thread
 	{
 		try
 		{
-			// one.curr.acquire();
-			// two.curr.acquire();
-			// three.curr.acquire();
-			// four.curr.acquire();
-			one.start();
-			two.start();
-			three.start();
-			four.start();
+
+			for (MyThread x:threads) 
+			{
+				x.curr.acquire();
+				x.start();
+			}
 
 			int time = 0;
+
 			for (int i = 0;i<(per*10);i++) 
 			{
-				sch(i);
+				current = sch(i, current);
 				i = time;
 				time++;
 				sleep(10);
 			}
 
-			one.join();
-			two.join();
-			three.join();
-			four.join();
+			for (MyThread x:threads) 
+			{
+				x.quit = true;
+				x.join();
+			}
+
 			print();
-			
 		}
-		catch (Exception e){System.out.println(e);}
+		catch (Exception e) {System.out.println(e);}
 
 		
 	}
-	public void sch(int time)
+	public MyThread sch(int time, MyThread current)
 	{
-		if (time%one.per==0) 
+
+		for (MyThread x:threads)
 		{
-			if (!one.finished) 
+			if(time%x.per==0)
 			{
-				oneRun++;
-				time = nextPer(time);
+				// if (!x.finished && time!=0) 
+				// {
+				// 	x.overrun++;
+				// 	time = nextPer(time);
+				// 	break;
+				// }
+				// else
+				// {
+				// 	if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running) 
+				// 	{
+				// 		x.endtime = (time)+x.per;
+				// 		x.curr.release();
+				// 		break;
+				// 	}
+				// }
+
+				if(time%x.per==0)
+				{
+					if (!x.finished && x.running) 
+					{
+						x.overrun++;
+						time = nextPer(time);
+
+						//x.curr.acquire();
+						break;
+					}
+					else
+					{
+						if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running&&!x.finished) 
+						{
+							x.endtime = (time)+x.per;
+							x.curr.release();
+							//System.out.println(time+x.getName());
+							return x;
+						}
+						else if(x.greaterThan(current)&&!x.finished)
+						{
+							try
+							{
+								current.curr.acquire();
+								x.curr.release();
+								return x;
+							}
+							catch(Exception e){System.out.println(e);}
+							
+						}
+						//return current;
+						//System.out.println(time+"|"+threads[1].running);
+					}
+				}
 			}
-			else
-			{
-				//System.out.println(time);
-				one.endtime = (time%per)+one.per;
-				one.curr.release();
-			}
-			
-			//one.isSch = true;
-			//System.out.println("1");
 		}
-		if(time%two.per==0 && one.finished)
-		{
-			if (!two.finished) 
-			{
-				twoRun++;
-				time = nextPer(time);
-			}
-			else
-			{
-				two.endtime = (time%per)+two.per;
-				two.curr.release();
-			}
-			
-			// two.time = time;
-			//two.isSch = true;
-			
-			//System.out.println("2");
-		}
-		if(time%three.per==0&& two.finished)
-		{
-			if (!three.finished) 
-			{
-				threeRun++;
-				time = nextPer(time);
-			}
-			else
-			{
-				three.endtime = (time%per)+three.per;
-				three.curr.release();	
-			}
-			
-			// three.time = time;
-			//three.isSch = true;
-			
-			//System.out.println("3");
-		}
-		if(time%four.per==0&& three.finished)
-		{
-			if (!four.finished) 
-			{
-				fourRun++;
-				time = nextPer(time);
-			}
-			else
-			{
-				//System.out.println(time);
-				four.endtime = (time%per)+four.per;
-				four.curr.release();
-			}
-			
-			// four.time = time;
-			//four.isSch = true;
-			
-			//System.out.println("4");
-		}
-		one.time = time%per;
-		two.time = time%per;
-		three.time = time%per;
-		four.time = time%per;
+
+		for (MyThread x:threads)
+			x.time = time;
+		return current;
 	}
 	public int nextPer(int current)
 	{
@@ -137,14 +114,7 @@ public class Scheduler extends Thread
 	}
 	public void print()
 	{
-			System.out.println(one.count);
-			System.out.println(two.count);
-			System.out.println(three.count);
-			System.out.println(four.count);
-
-			System.out.println(oneRun);
-			System.out.println(twoRun);
-			System.out.println(threeRun);
-			System.out.println(fourRun);
+		for (MyThread x:threads)
+			System.out.println(x.getName()+" - Ran :"+x.count+" | Overran : " +x.overrun);
 	}
 }
