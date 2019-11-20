@@ -35,6 +35,9 @@ public class MyThread extends Thread
 			{
 				//System.out.println(this.getName());
 				curr.acquire();
+				// if (quit) {
+				// 	break;
+				// }
 				running =true;
 				count++;
 				finished = false;
@@ -46,9 +49,6 @@ public class MyThread extends Thread
 						running =false;
 						break;
 					}
-					//System.out.println(endtime);
-					//sleep(10);
-					//count++;
 				}
 				running =false;
 				if (time>=endtime) 
@@ -56,10 +56,7 @@ public class MyThread extends Thread
 
 				finished = true;
 
-				//check
-				//overrun = time;
-
-				break;
+				//break;
 			}
 			catch(Exception e){System.out.println(e);}
 		}

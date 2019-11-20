@@ -35,6 +35,7 @@ public class Scheduler extends Thread
 			for (MyThread x:threads) 
 			{
 				x.quit = true;
+				x.curr.release();
 				x.join();
 			}
 
@@ -51,57 +52,39 @@ public class Scheduler extends Thread
 		{
 			if(time%x.per==0)
 			{
-				// if (!x.finished && time!=0) 
-				// {
-				// 	x.overrun++;
-				// 	time = nextPer(time);
-				// 	break;
-				// }
-				// else
-				// {
-				// 	if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running) 
-				// 	{
-				// 		x.endtime = (time)+x.per;
-				// 		x.curr.release();
-				// 		break;
-				// 	}
-				// }
-
-				if(time%x.per==0)
+				if (!x.finished && x.running) 
 				{
-					if (!x.finished && x.running) 
-					{
-						x.overrun++;
-						time = nextPer(time);
+					x.overrun++;
+					time = nextPer(time);
 
-						//x.curr.acquire();
-						break;
-					}
-					else
+					//x.curr.acquire();
+					break;
+				}
+				else
+				{
+					if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running&&!x.finished) 
 					{
-						if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running&&!x.finished) 
+						x.endtime = (time)+x.per;
+						x.curr.release();
+						//System.out.println(time+x.getName());
+						return x;
+					}
+					else if(x.greaterThan(current)&&!x.finished)
+					{
+						try
 						{
-							x.endtime = (time)+x.per;
+							current.curr.acquire();
 							x.curr.release();
-							//System.out.println(time+x.getName());
 							return x;
 						}
-						else if(x.greaterThan(current)&&!x.finished)
-						{
-							try
-							{
-								current.curr.acquire();
-								x.curr.release();
-								return x;
-							}
-							catch(Exception e){System.out.println(e);}
-							
-						}
-						//return current;
-						//System.out.println(time+"|"+threads[1].running);
+						catch(Exception e){System.out.println(e);}
+						
 					}
+					//return current;
+					//System.out.println(time+"|"+threads[1].running);
 				}
 			}
+			
 		}
 
 		for (MyThread x:threads)
