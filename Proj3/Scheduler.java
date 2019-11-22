@@ -2,12 +2,11 @@ public class Scheduler extends Thread
 {
 	private int per;
 	private MyThread[] threads;
-	private MyThread current;
+
 	public Scheduler(MyThread one, MyThread two, MyThread three, MyThread four, int per)
 	{
 		this.per = per;
 		threads = new MyThread[]{one,two,three,four};
-		current = one;
 	}
 
 	@Override
@@ -15,89 +14,43 @@ public class Scheduler extends Thread
 	{
 		try
 		{
-
-			for (MyThread x:threads) 
+			for (MyThread all:threads) 
 			{
-				x.curr.acquire();
-				x.start();
+				all.sema.acquire();
+				all.start();
 			}
-
-			int time = 0;
-
-			for (int i = 0;i<(per*10);i++) 
+			int time =0;
+			for (int i = 0;i<160;i++) 
 			{
-				current = sch(i, current);
-				i = time;
-				time++;
+				sch(i);
 				sleep(10);
+				time++;
 			}
-
-			for (MyThread x:threads) 
+			for (MyThread all:threads) 
 			{
-				x.quit = true;
-				x.curr.release();
-				x.join();
+				all.quit = true;
+				all.sema.release();
+				all.join();
 			}
-
 			print();
 		}
-		catch (Exception e) {System.out.println(e);}
-
-		
+		catch (Exception e) {System.out.println(e);}		
 	}
-	public MyThread sch(int time, MyThread current)
+	public void sch(int time)
 	{
-
 		for (MyThread x:threads)
-		{
 			if(time%x.per==0)
 			{
-				if (!x.finished && x.running) 
-				{
+				if (!x.finished)
 					x.overrun++;
-					time = nextPer(time);
-
-					//x.curr.acquire();
-					break;
-				}
 				else
-				{
-					if (!threads[0].running&&!threads[1].running&&!threads[2].running&&!threads[3].running&&!x.finished) 
-					{
-						x.endtime = (time)+x.per;
-						x.curr.release();
-						//System.out.println(time+x.getName());
-						return x;
-					}
-					else if(x.greaterThan(current)&&!x.finished)
-					{
-						try
-						{
-							current.curr.acquire();
-							x.curr.release();
-							return x;
-						}
-						catch(Exception e){System.out.println(e);}
-						
-					}
-					//return current;
-					//System.out.println(time+"|"+threads[1].running);
-				}
+					x.sema.release();
 			}
-			
-		}
-
-		for (MyThread x:threads)
-			x.time = time;
-		return current;
-	}
-	public int nextPer(int current)
-	{
-		return current+(per-(current%per));
 	}
 	public void print()
 	{
 		for (MyThread x:threads)
-			System.out.println(x.getName()+" - Ran :"+x.count+" | Overran : " +x.overrun);
+			System.out.println(x.getName()+
+				" - Ran:"+x.count+" times | Overran : " +x.overrun);
 	}
 }
