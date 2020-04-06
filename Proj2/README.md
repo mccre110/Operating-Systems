@@ -13,4 +13,4 @@ when Freds logic begins to run. When Fred is done Wilma is unlocked and begins t
 completion Wilma then unlocks Fred’s semaphore and Fred can run. These semaphores are dependent 
 on each other and that is how these threads get synchronized. 
 
-Sema creates two threads and passes them two semaphores.
+Sema creates two threads and passes them to semaphores.
